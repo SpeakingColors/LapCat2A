@@ -1,0 +1,127 @@
+[
+ {
+  "n": "1",
+  "name": "Previous preset",
+  "tip": "Loads the previous preset in the list. Try it while your audio plays to hear the difference."
+ },
+ {
+  "n": "2",
+  "name": "Preset name",
+  "tip": "Shows the preset name and opens the preset list. Try searching by type, such as Vocal or Drum, and double-click the name to rename."
+ },
+ {
+  "n": "3",
+  "name": "Next preset",
+  "tip": "Loads the next preset in the list. Try it while your audio plays to hear the difference."
+ },
+ {
+  "n": "4",
+  "name": "Save",
+  "tip": "Saves the current knob settings as your own preset and asks before it overwrites one. Try tweaking a factory sound and saving your own copy."
+ },
+ {
+  "n": "5",
+  "name": "Bypass",
+  "tip": "Plays the dry signal so you can compare it with the processed sound (key B). Try switching it on and off while your audio plays, and match the loudness first."
+ },
+ {
+  "n": "6",
+  "name": "Guide",
+  "tip": "Opens a short guide and the keyboard shortcuts. Try it first if you are not sure where to start."
+ },
+ {
+  "n": "7",
+  "name": "Settings",
+  "tip": "Opens the settings for info bubbles, power saving and the colour look. Try the other two colour looks to see which you like."
+ },
+ {
+  "n": "8",
+  "name": "About & Support",
+  "tip": "Opens the about page with links, licence and where your presets are saved. Try it to find the preset folder for your system."
+ },
+ {
+  "n": "9",
+  "name": "Gain",
+  "tip": "Make-up gain after the cell, 0 to 40 dB. It never changes how much compression happens or where the meter sits. It makes things louder and pushes the tube stage harder, which adds warmth and then distortion. Try raising it until the output matches the input."
+ },
+ {
+  "n": "10",
+  "name": "Peak Reduction",
+  "tip": "How much compression you get: it lowers the threshold from 0 dB down to about -40 dB. At 0 nothing is compressed. Try raising it until the meter shows 3 to 6 dB on the loud parts."
+ },
+ {
+  "n": "11",
+  "name": "Mix",
+  "tip": "Blends the dry and the leveled signal for parallel compression. It is not on the original hardware. Try 40 percent on drums with a high Peak Reduction."
+ },
+ {
+  "n": "12",
+  "name": "HF Emphasis",
+  "tip": "Makes the detector hear fewer lows, so the cell reacts more to highs. 0 is off. Try 30 on a vocal to tame bright, hissy parts."
+ },
+ {
+  "n": "13",
+  "name": "Meter GR",
+  "tip": "Shows how many dB the signal is turned down. Try it while setting Peak Reduction."
+ },
+ {
+  "n": "14",
+  "name": "Meter +10",
+  "tip": "Shows output level, where 0 means the +10 setting (an assumed digital level here). Try it to check your Gain."
+ },
+ {
+  "n": "15",
+  "name": "Meter +4",
+  "tip": "Shows output level, where 0 means the +4 setting (an assumed digital level here). Try it to check your Gain."
+ },
+ {
+  "n": "16",
+  "name": "Ratio Compress",
+  "tip": "Gentle squeeze, roughly 3 to 1, softer for small overshoots. Try it for vocals, bass and pads."
+ },
+ {
+  "n": "17",
+  "name": "Ratio Limit",
+  "tip": "Much higher ratio, approaching a limiter. Try it for stabs and hard peaks."
+ },
+ {
+  "n": "A",
+  "name": "Meter face (VU)",
+  "tip": "The meter. In GR it shows how many dB the cell is turning the signal down, with 0 at the right, and it moves with VU style needle ballistics: not instantly. Try playing audio and raising Peak Reduction to watch it move. Gain never moves it."
+ },
+ {
+  "n": "B",
+  "name": "Transfer curve",
+  "tip": "Shows output level against input level in dB, before Gain, with the yellow line at the threshold. Try dragging it sideways to move Peak Reduction; the dot is the live signal."
+ },
+ {
+  "n": "C",
+  "name": "Gain reduction history",
+  "tip": "Shows how many dB the cell turned the signal down over the last six seconds. Try a long loud passage, then watch the fast drop and the slow tail as the cell lets go."
+ },
+ {
+  "n": "D",
+  "name": "Sidechain filter",
+  "tip": "Shows what the detector listens to, in dB across frequency. Flat means it hears everything. Try dragging it down at the left so the lows are heard less."
+ },
+ {
+  "n": "E",
+  "name": "Input level strip",
+  "tip": "Input level in dB, with a clip marker at the top. Click it to clear the marker; try keeping the peaks below 0."
+ },
+ {
+  "n": "F",
+  "name": "Output level strip",
+  "tip": "Output level in dB, after Gain, with a clip marker at the top. Click it to clear the marker; try lowering Gain if it lights up."
+ },
+ {
+  "n": "G",
+  "name": "Input peak readout",
+  "tip": "The highest input level lately, in dB. Try comparing it with the output peak to see the net level change."
+ },
+ {
+  "n": "H",
+  "name": "Output peak readout",
+  "tip": "The highest output level lately, in dB. Try matching it to the input peak when you compare with Bypass."
+ }
+]

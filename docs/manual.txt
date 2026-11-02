@@ -1,0 +1,44 @@
+# Intro
+LapCat2A is a free, open source optical leveling amplifier (VST3 effect) inspired by the classic LA-2A. It is a behaviour model built from published manuals and measurements, not a circuit simulation. Two knobs do the work: Peak Reduction decides how hard the cell is driven, and Gain is make-up after the cell. It was made to thicken supersaw leads and pads, and it also levels vocals, bass and buses.
+
+Free and open source (AGPL-3.0-or-later). It collects nothing and never uses the network. This is a test build: it has not been tried on real Windows, macOS or Linux hosts yet, and the sound has not been tuned by ear.
+
+# Quick start
+- Put LapCat2A on an audio track and load the preset Start Here.
+- Play your sound and raise Peak Reduction until the needle shows 3 to 6 dB on the loud parts.
+- Raise Gain until the level matches the dry sound (press B for Bypass and compare). Louder always sounds better, so match the level before you judge.
+- To thicken a supersaw lead, load Thicken Lead Gentle or Thicken Lead Heavy and follow the Guide tab "Thicken a supersaw".
+- Mix below 100 percent gives parallel compression.
+
+# Recommendations
+- Supersaw lead: Peak Reduction 42 to 58, Gain 13 to 22. Compress for a light, even body, Limit for a deep, tight one. Stop when the top starts to fizz or the notes begin to pump.
+- Supersaw stab: Thicken Parallel Punch (Peak 70, Limit, Mix 40) keeps the attack and adds weight underneath.
+- Vocals: Vocal Leveler, then add HF Emphasis (30 to 40) if bright, hissy parts jump out.
+- Bass: Bass Glue for even notes, Bass Hold for sustain.
+- Check Gain against the output strip: if the clip marker lights, lower Gain.
+
+# Under the hood
+Signal flow: input, sidechain filter (HF Emphasis), T4 cell (fast and slow stage with memory), Gain, tube stage, output transformer, Mix, output. As in the real unit, the sidechain listens to the signal after the cell (feedback).
+
+Oversampling and latency: the tube stage runs at 4x oversampling with a linear phase filter. The plugin reports exactly 30 samples of latency at every sample rate, and the dry signal (Mix and Bypass) is delayed by the same amount, so Mix never combs and Bypass lines up. Bypass returns the input bit-exactly after the delay (measured in the self test), with a 10 ms crossfade so switching does not click.
+
+Smoothing: Peak Reduction, Gain, Ratio mode, HF Emphasis and Mix change through a 10 ms linear ramp. Measured in the core test: a Gain step is first heard after 0.62 ms and reaches 90 percent of the change after 10 ms; Peak Reduction 0.88 ms and 12 ms; Mix 0 ms and 9 ms.
+
+Level: with Peak Reduction 0 and Gain 0 the plugin is unity at 1 kHz (measured -0.005 dB); Gain 100 adds 40.00 dB for a small signal. Gain does not change the gain reduction (4.09 dB at both Gain 0 and Gain 100 in the test). The frequency response at 48 kHz is flat within 0.04 dB at 50 Hz and 0.01 dB at 20 kHz.
+
+Cell behaviour (measured on the C++ core, 1 kHz sine, Peak 50): settled gain reduction 1.83 dB at -20 dBFS, 5.07 dB at -10 dBFS and 8.23 dB at -4 dBFS, within 0.15 dB of the static curve shown in the transfer display. Attack reaches 63 percent in 6.6 ms. After 0.3 s of compression the release is half done in 58 ms; after 12 s of compression it is half done in 74 ms and the full release takes tens of seconds. These are the model's numbers. Whether they match a real LA-2A is not verified here.
+
+Harmonics (1 kHz at -12 dBFS, Peak 50, Gain 25, 4.1 dB reduction): second harmonic -55.4 dB, third harmonic -35.7 dB below the fundamental. The third is larger than the second, as in published measurements of real units.
+
+Aliasing: with the tube stage driven hard (10.4 kHz at -26 dBFS, Gain 100) non-harmonic energy was -99.6 dB below the fundamental with the 4x oversampler, against -18.2 dB without it. Other tones at the most extreme settings were measured earlier at roughly -25 to -77 dB for some signals; normal use stays far below that. Aliasing at every extreme setting is not proven to be inaudible.
+
+DC: the tube bias makes a DC offset (-33.6 dB below the signal) which a 3 Hz output coupling removes (-204 dB afterwards).
+
+Stability: silence, full scale DC, full scale square waves, NaN and Inf input, denormal sized input and 4000 blocks of random parameter jumps all stay finite and bounded. The optional noise floor and 60 Hz hum are off by default.
+
+The C++ core reproduces the interactive mockup's model exactly for seven parameter sets (largest difference 0 with the oversampler and output coupling switched off for the comparison).
+
+Not verified: sound on real hardware comparisons, tuning by ear, behaviour in any real DAW, pluginval on Windows and macOS, the installers on real machines.
+
+# Unsigned installers
+The installers are not signed or notarized because certificates cost money and the plugin is free. Windows may show a blue "unknown publisher" screen: choose More info, then Run anyway. macOS may block the package: open System Settings, Privacy and Security, and choose Open Anyway. The SHA256SUMS file in the zip lets you check the files.

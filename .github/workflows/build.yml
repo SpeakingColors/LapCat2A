@@ -1,0 +1,97 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: lapcat2a-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  core-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Core DSP tests (no JUCE)
+        run: sh tests/run.sh
+
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libasound2-dev libfreetype-dev libfontconfig1-dev libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxext-dev libgl1-mesa-dev xvfb
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - name: Build
+        run: cmake --build build --config Release -j4
+      - name: Download pluginval
+        run: |
+          curl -L -o pluginval.zip https://github.com/Tracktion/pluginval/releases/latest/download/pluginval_Linux.zip
+          unzip -o pluginval.zip
+          chmod +x pluginval
+      - name: pluginval (strictness 5)
+        run: xvfb-run -a ./pluginval --strictness-level 5 --skip-gui-tests build/LapCat2A_artefacts/Release/VST3/LapCat2A.vst3
+      - uses: actions/upload-artifact@v4
+        with:
+          name: LapCat2A-linux-vst3
+          path: build/LapCat2A_artefacts/Release/VST3/LapCat2A.vst3
+
+  editor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libasound2-dev libfreetype-dev libfontconfig1-dev libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxext-dev libgl1-mesa-dev xvfb
+      - name: Build the snapshot tool
+        run: |
+          cmake -S . -B build-snap -DCMAKE_BUILD_TYPE=Release -DLAP_BUILD_SNAPSHOT=ON
+          cmake --build build-snap --target LapSnapshot -j4
+      - name: Self tests (parameters, state round trip, old-state fixture, bypass, editor create and resize)
+        run: xvfb-run -a build-snap/LapSnapshot_artefacts/Release/LapSnapshot --selftest tests/fixtures/state-v1.xml
+      - name: Render the real window
+        run: |
+          mkdir -p shots
+          S=build-snap/LapSnapshot_artefacts/Release/LapSnapshot
+          xvfb-run -a $S shots/look-C.png 1.0 C none 150
+          xvfb-run -a $S shots/look-A.png 1.0 A none 150
+          xvfb-run -a $S shots/look-B.png 1.0 B none 150
+          xvfb-run -a $S shots/small.png 0.5 C none 60
+          for d in settings guide guide2 guide3 about presets save export import; do xvfb-run -a $S shots/dialog-$d.png 1.0 C $d 30; done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: LapCat2A-editor-snapshots
+          path: shots
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -S . -B build
+      - name: Build
+        run: cmake --build build --config Release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: LapCat2A-windows-vst3
+          path: build/LapCat2A_artefacts/Release/VST3/LapCat2A.vst3
+
+  macos:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - name: Build
+        run: cmake --build build --config Release -j4
+      - uses: actions/upload-artifact@v4
+        with:
+          name: LapCat2A-macos-vst3
+          path: build/LapCat2A_artefacts/Release/VST3/LapCat2A.vst3

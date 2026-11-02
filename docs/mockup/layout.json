@@ -1,0 +1,830 @@
+{
+ "rects": {
+  "cheekL": [
+   0,
+   0,
+   52,
+   640
+  ],
+  "cheekR": [
+   1048,
+   0,
+   52,
+   640
+  ],
+  "main": [
+   52,
+   0,
+   996,
+   640
+  ],
+  "hdr": [
+   52,
+   0,
+   996,
+   46
+  ],
+  "body": [
+   52,
+   46,
+   996,
+   568
+  ],
+  "left": [
+   52,
+   46,
+   904,
+   568
+  ],
+  "hw": [
+   52,
+   46,
+   904,
+   292
+  ],
+  "disp": [
+   52,
+   338,
+   904,
+   232
+  ],
+  "rig": [
+   52,
+   570,
+   904,
+   44
+  ],
+  "meters": [
+   956,
+   46,
+   92,
+   568
+  ],
+  "foot": [
+   52,
+   614,
+   996,
+   26
+  ],
+  "logo": [
+   64,
+   5.5,
+   34,
+   34
+  ],
+  "name": [
+   106,
+   9.5,
+   97.16,
+   26
+  ],
+  "badge": [
+   175.52,
+   11.5,
+   27.64,
+   21
+  ],
+  "s87": [
+   211.16,
+   15.5,
+   59.78,
+   14
+  ],
+  "pPrev": [
+   338.5,
+   10.09,
+   35.34,
+   24.8
+  ],
+  "pName": [
+   377.84,
+   8.91,
+   190,
+   27.19
+  ],
+  "pNext": [
+   571.84,
+   10.09,
+   35.34,
+   24.8
+  ],
+  "pSave": [
+   611.19,
+   10.09,
+   47.08,
+   24.8
+  ],
+  "bBypass": [
+   725.83,
+   10.09,
+   59.36,
+   24.8
+  ],
+  "bGuide": [
+   793.19,
+   10.09,
+   51.8,
+   24.8
+  ],
+  "bSettings": [
+   852.98,
+   10.09,
+   65.81,
+   24.8
+  ],
+  "bAbout": [
+   926.8,
+   10.09,
+   109.2,
+   24.8
+  ],
+  "cGain": [
+   66,
+   100,
+   176,
+   182
+  ],
+  "cPeak": [
+   766,
+   100,
+   176,
+   182
+  ],
+  "vuwrap": [
+   272,
+   62,
+   464,
+   224
+  ],
+  "cvVU": [
+   284,
+   74,
+   440,
+   200
+  ],
+  "ears": [
+   274,
+   40,
+   460,
+   26
+  ],
+  "segMeter": [
+   434,
+   311,
+   140,
+   27
+  ],
+  "cvCurve": [
+   66.33,
+   363,
+   282,
+   112
+  ],
+  "cvHist": [
+   362.98,
+   363,
+   282,
+   112
+  ],
+  "cvFilt": [
+   659.66,
+   363,
+   282,
+   112
+  ],
+  "segMode": [
+   118.39,
+   512,
+   177.86,
+   33
+  ],
+  "cMix": [
+   360.66,
+   478,
+   286.67,
+   84
+  ],
+  "cEmph": [
+   657.33,
+   478,
+   286.66,
+   84
+  ],
+  "cvIn": [
+   962.5,
+   70,
+   38,
+   440
+  ],
+  "cvOut": [
+   1004.5,
+   70,
+   38,
+   440
+  ],
+  "pkIn": [
+   969.8,
+   514,
+   33,
+   14
+  ],
+  "pkOut": [
+   1008.8,
+   514,
+   26.41,
+   14
+  ],
+  "winsz": [
+   968.75,
+   620.5,
+   67.25,
+   14
+  ]
+ },
+ "tips": {
+  "cheekL": "The wooden side panels. Double-click either one to put the window back to its normal size.",
+  "cheekR": "The wooden side panels. Double-click either one to put the window back to its normal size.",
+  "pPrev": "Loads the previous preset in the list. Try it while the preview plays to hear the difference.",
+  "pName": "Shows the preset name and opens the preset list. Try searching by type, such as Vocal or Drum, and double-click the name to rename.",
+  "pNext": "Loads the next preset in the list. Try it while the preview plays to hear the difference.",
+  "pSave": "Saves the current knob settings as your own preset and asks before it overwrites one. Try tweaking a factory sound and saving your own copy.",
+  "bBypass": "Plays the dry signal so you can compare it with the processed sound (key B). Try switching it on and off while the preview plays, and match the loudness first.",
+  "bGuide": "Opens a short guide and the keyboard shortcuts. Try it first if you are not sure where to start.",
+  "bSettings": "Opens the settings for info bubbles, power saving and the colour look. Try the other two colour looks to see which you like.",
+  "bAbout": "Opens the about page with links, licence and where your presets are saved. Try it to find the preset folder for your system.",
+  "cvVU": "The meter. In GR it shows how many dB the cell is turning the signal down, with 0 at the right, and it moves with VU style needle ballistics: not instantly. Try pressing Play and raising Peak Reduction to watch it move. Gain never moves it.",
+  "cvCurve": "Shows output level against input level in dB, before Gain, with the yellow line at the threshold. Try dragging it sideways to move Peak Reduction; the dot is the live signal.",
+  "cvHist": "Shows how many dB the cell turned the signal down over the last six seconds. Try a long loud passage, then watch the fast drop and the slow tail as the cell lets go.",
+  "cvFilt": "Shows what the detector listens to, in dB across frequency. Flat means it hears everything. Try dragging it down at the left so the lows are heard less.",
+  "segMode": "Chooses how strongly the cell squeezes loud parts. Try Compress for gentle leveling and Limit for tight control.",
+  "cvIn": "Input level in dB, with a clip marker at the top. Click it to clear the marker; try keeping the peaks below 0.",
+  "cvOut": "Output level in dB, after Gain, with a clip marker at the top. Click it to clear the marker; try lowering Gain if it lights up.",
+  "pkIn": "The highest input level lately, in dB. Try comparing it with the output peak to see the net level change.",
+  "pkOut": "The highest output level lately, in dB. Try matching it to the input peak when you compare with Bypass."
+ },
+ "texts": [],
+ "cheekTip": "The wooden side panels. Double-click either one to put the window back to its normal size.",
+ "knobs": [
+  {
+   "id": "Gain",
+   "big": true,
+   "cell": [
+    66,
+    100,
+    176,
+    182
+   ],
+   "lab": [
+    135.38,
+    100,
+    37.25,
+    20
+   ],
+   "labText": "Gain",
+   "knob": [
+    79,
+    120,
+    150,
+    150
+   ],
+   "val": [
+    110.78,
+    266,
+    86.42,
+    16
+   ],
+   "tip": "Make-up gain after the cell, 0 to 40 dB. It never changes how much compression happens or where the meter sits. It makes things louder and pushes the tube stage harder, which adds warmth and then distortion. Try raising it until the output matches the input."
+  },
+  {
+   "id": "Peak Reduction",
+   "big": true,
+   "cell": [
+    766,
+    100,
+    176,
+    182
+   ],
+   "lab": [
+    787.23,
+    100,
+    133.53,
+    20
+   ],
+   "labText": "Peak Reduction",
+   "knob": [
+    779,
+    120,
+    150,
+    150
+   ],
+   "val": [
+    792.78,
+    266,
+    122.42,
+    16
+   ],
+   "tip": "How much compression you get: it lowers the threshold from 0 dB down to about -40 dB. At 0 nothing is compressed. Try raising it until the meter shows 3 to 6 dB on the loud parts."
+  },
+  {
+   "id": "Mix",
+   "big": false,
+   "cell": [
+    360.66,
+    478,
+    286.67,
+    84
+   ],
+   "lab": [
+    524.98,
+    502,
+    23.55,
+    18
+   ],
+   "labText": "Mix",
+   "knob": [
+    446.98,
+    487,
+    66,
+    66
+   ],
+   "val": [
+    524.98,
+    522,
+    36.02,
+    16
+   ],
+   "tip": "Blends the dry and the leveled signal for parallel compression. It is not on the original hardware. Try 40 percent on drums with a high Peak Reduction."
+  },
+  {
+   "id": "HF Emphasis",
+   "big": false,
+   "cell": [
+    657.33,
+    478,
+    286.66,
+    84
+   ],
+   "lab": [
+    796.42,
+    502,
+    86.47,
+    18
+   ],
+   "labText": "HF Emphasis",
+   "knob": [
+    718.42,
+    487,
+    66,
+    66
+   ],
+   "val": [
+    796.42,
+    522,
+    50.41,
+    16
+   ],
+   "tip": "Makes the detector hear fewer lows, so the cell reacts more to highs. 0 is off. Try 30 on a vocal to tame bright, hissy parts."
+  }
+ ],
+ "segMeterBtns": [
+  {
+   "t": "GR",
+   "r": [
+    435,
+    312,
+    46,
+    25
+   ],
+   "tip": "Shows how many dB the signal is turned down. Try it while setting Peak Reduction."
+  },
+  {
+   "t": "+10",
+   "r": [
+    481,
+    312,
+    46,
+    25
+   ],
+   "tip": "Shows output level, where 0 means the +10 setting (an assumed digital level here). Try it to check your Gain."
+  },
+  {
+   "t": "+4",
+   "r": [
+    527,
+    312,
+    46,
+    25
+   ],
+   "tip": "Shows output level, where 0 means the +4 setting (an assumed digital level here). Try it to check your Gain."
+  }
+ ],
+ "segModeBtns": [
+  {
+   "t": "Compress",
+   "r": [
+    119.39,
+    513,
+    91.86,
+    31
+   ],
+   "tip": "Gentle squeeze, roughly 3 to 1, softer for small overshoots. Try it for vocals, bass and pads."
+  },
+  {
+   "t": "Limit",
+   "r": [
+    211.25,
+    513,
+    84,
+    31
+   ],
+   "tip": "Much higher ratio, approaching a limiter. Try it for stabs and hard peaks."
+  }
+ ],
+ "dcaps": [
+  {
+   "kind": "dcap",
+   "t": "Transfer curve",
+   "r": [
+    64,
+    346,
+    93.31,
+    14
+   ],
+   "fs": 12,
+   "mono": false,
+   "fw": 400,
+   "ls": 1.5,
+   "tt": "uppercase",
+   "italic": false,
+   "align": "start",
+   "color": "rgb(232, 233, 238)"
+  },
+  {
+   "kind": "dcap",
+   "t": "Gain reduction, last 6 s",
+   "r": [
+    360.66,
+    346,
+    144.63,
+    14
+   ],
+   "fs": 12,
+   "mono": false,
+   "fw": 400,
+   "ls": 1.5,
+   "tt": "uppercase",
+   "italic": false,
+   "align": "start",
+   "color": "rgb(232, 233, 238)"
+  },
+  {
+   "kind": "dcap",
+   "t": "Sidechain filter",
+   "r": [
+    657.33,
+    346,
+    97.41,
+    14
+   ],
+   "fs": 12,
+   "mono": false,
+   "fw": 400,
+   "ls": 1.5,
+   "tt": "uppercase",
+   "italic": false,
+   "align": "start",
+   "color": "rgb(232, 233, 238)"
+  }
+ ],
+ "swcaps": [
+  {
+   "kind": "swcap",
+   "t": "Meter",
+   "r": [
+    485.28,
+    294,
+    37.44,
+    14
+   ],
+   "fs": 12,
+   "mono": false,
+   "fw": 400,
+   "ls": 2,
+   "tt": "uppercase",
+   "italic": false,
+   "align": "start",
+   "color": "rgb(232, 233, 238)"
+  },
+  {
+   "kind": "swcap",
+   "t": "Ratio mode",
+   "r": [
+    118.39,
+    495,
+    68.58,
+    14
+   ],
+   "fs": 12,
+   "mono": false,
+   "fw": 400,
+   "ls": 2,
+   "tt": "uppercase",
+   "italic": false,
+   "align": "start",
+   "color": "rgb(232, 233, 238)"
+  }
+ ],
+ "mcaps": [
+  {
+   "kind": "mcap",
+   "t": "In",
+   "r": [
+    962.64,
+    54,
+    11.66,
+    14
+   ],
+   "fs": 12,
+   "mono": false,
+   "fw": 400,
+   "ls": 1.5,
+   "tt": "uppercase",
+   "italic": false,
+   "align": "start",
+   "color": "rgb(232, 233, 238)"
+  },
+  {
+   "kind": "mcap",
+   "t": "Out",
+   "r": [
+    1000.3,
+    54,
+    21.05,
+    14
+   ],
+   "fs": 12,
+   "mono": false,
+   "fw": 400,
+   "ls": 1.5,
+   "tt": "uppercase",
+   "italic": false,
+   "align": "start",
+   "color": "rgb(232, 233, 238)"
+  }
+ ],
+ "footTexts": [
+  {
+   "kind": "foot",
+   "t": "Studio 87 \u00b7 LapCat2A v2 design mockup",
+   "r": [
+    64,
+    620.5,
+    200,
+    14
+   ],
+   "fs": 12,
+   "mono": false,
+   "fw": 400,
+   "ls": 1,
+   "tt": "none",
+   "italic": false,
+   "align": "start",
+   "color": "rgb(169, 173, 184)"
+  },
+  {
+   "kind": "foot",
+   "t": "1100 \u00d7 640 px",
+   "r": [
+    968.75,
+    620.5,
+    67.25,
+    14
+   ],
+   "fs": 12,
+   "mono": false,
+   "fw": 400,
+   "ls": 1,
+   "tt": "none",
+   "italic": false,
+   "align": "start",
+   "color": "rgb(169, 173, 184)"
+  }
+ ],
+ "nameText": {
+  "kind": "name",
+  "t": "LapCat2A",
+  "r": [
+   106,
+   9.5,
+   97.16,
+   26
+  ],
+  "fs": 26,
+  "mono": false,
+  "fw": 800,
+  "ls": 0.3,
+  "tt": "none",
+  "italic": true,
+  "align": "start",
+  "color": "rgb(255, 255, 255)"
+ },
+ "s87Text": {
+  "kind": "s87",
+  "t": "Studio 87",
+  "r": [
+   211.16,
+   15.5,
+   59.78,
+   14
+  ],
+  "fs": 12,
+  "mono": false,
+  "fw": 400,
+  "ls": 2,
+  "tt": "uppercase",
+  "italic": false,
+  "align": "start",
+  "color": "rgb(169, 173, 184)"
+ },
+ "badgeText": {
+  "kind": "badge",
+  "t": "2A",
+  "r": [
+   175.52,
+   11.5,
+   27.64,
+   21
+  ],
+  "fs": 17,
+  "mono": false,
+  "fw": 700,
+  "ls": 1,
+  "tt": "none",
+  "italic": false,
+  "align": "start",
+  "color": "rgb(27, 18, 6)"
+ },
+ "btnText": {
+  "kind": "btn",
+  "t": "\u25c0",
+  "r": [
+   338.5,
+   10.09,
+   35.34,
+   24.8
+  ],
+  "fs": 14,
+  "mono": false,
+  "fw": 400,
+  "ls": 0.5,
+  "tt": "none",
+  "italic": false,
+  "align": "center",
+  "color": "rgb(244, 245, 247)"
+ },
+ "pnameText": {
+  "kind": "pname",
+  "t": "Start Here *",
+  "r": [
+   377.84,
+   8.91,
+   190,
+   27.19
+  ],
+  "fs": 16,
+  "mono": false,
+  "fw": 600,
+  "ls": 0.5,
+  "tt": "none",
+  "italic": false,
+  "align": "center",
+  "color": "rgb(244, 245, 247)"
+ },
+ "segText": {
+  "kind": "seg",
+  "t": "Compress",
+  "r": [
+   119.39,
+   513,
+   91.86,
+   31
+  ],
+  "fs": 16,
+  "mono": false,
+  "fw": 400,
+  "ls": 1,
+  "tt": "none",
+  "italic": false,
+  "align": "center",
+  "color": "rgb(225, 203, 244)"
+ },
+ "segTextMeter": {
+  "kind": "segm",
+  "t": "GR",
+  "r": [
+   435,
+   312,
+   46,
+   25
+  ],
+  "fs": 14,
+  "mono": false,
+  "fw": 400,
+  "ls": 1,
+  "tt": "none",
+  "italic": false,
+  "align": "center",
+  "color": "rgb(225, 203, 244)"
+ },
+ "kvalText": {
+  "kind": "kval",
+  "t": "20 \u00b7 +8.0 dB",
+  "r": [
+   110.78,
+   266,
+   86.42,
+   16
+  ],
+  "fs": 12,
+  "mono": true,
+  "fw": 400,
+  "ls": 0,
+  "tt": "none",
+  "italic": false,
+  "align": "start",
+  "color": "rgb(169, 173, 184)"
+ },
+ "kvalSm": {
+  "kind": "kvalsm",
+  "t": "100 %",
+  "r": [
+   524.98,
+   522,
+   36.02,
+   16
+  ],
+  "fs": 12,
+  "mono": true,
+  "fw": 400,
+  "ls": 0,
+  "tt": "none",
+  "italic": false,
+  "align": "start",
+  "color": "rgb(169, 173, 184)"
+ },
+ "labBig": {
+  "kind": "labbig",
+  "t": "Gain",
+  "r": [
+   135.38,
+   100,
+   37.25,
+   20
+  ],
+  "fs": 15,
+  "mono": false,
+  "fw": 700,
+  "ls": 3,
+  "tt": "uppercase",
+  "italic": false,
+  "align": "start",
+  "color": "rgb(232, 233, 238)"
+ },
+ "labSm": {
+  "kind": "labsm",
+  "t": "Mix",
+  "r": [
+   524.98,
+   502,
+   23.55,
+   18
+  ],
+  "fs": 14,
+  "mono": false,
+  "fw": 700,
+  "ls": 2,
+  "tt": "uppercase",
+  "italic": false,
+  "align": "start",
+  "color": "rgb(232, 233, 238)"
+ },
+ "pk": {
+  "kind": "pk",
+  "t": "-15.0",
+  "r": [
+   969.8,
+   514,
+   33,
+   14
+  ],
+  "fs": 11,
+  "mono": true,
+  "fw": 400,
+  "ls": 0,
+  "tt": "none",
+  "italic": false,
+  "align": "start",
+  "color": "rgb(169, 173, 184)"
+ },
+ "tokens": "#e9e0c8"
+}

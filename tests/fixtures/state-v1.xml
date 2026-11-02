@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<LAPCAT2A look="B" tips="0" power="1" noise="1" preset="Hoover Leveler"
+          stateVersion="1">
+  <PARAM id="bypass" value="0.0"/>
+  <PARAM id="emph" value="25.0"/>
+  <PARAM id="gain" value="33.0"/>
+  <PARAM id="meter" value="2.0"/>
+  <PARAM id="mix" value="40.0"/>
+  <PARAM id="mode" value="1.0"/>
+  <PARAM id="peak" value="62.5"/>
+</LAPCAT2A>
