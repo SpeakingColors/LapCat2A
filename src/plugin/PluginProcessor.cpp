@@ -20,6 +20,8 @@ AudioProcessorValueTreeState::ParameterLayout LapCat2AProcessor::createLayout()
     p.push_back (std::make_unique<AudioParameterFloat> (ParameterID { ids::mix, v }, "Mix",
         NormalisableRange<float> (0.0f, 100.0f, 0.01f), 100.0f, AudioParameterFloatAttributes().withLabel ("%")));
     p.push_back (std::make_unique<AudioParameterBool> (ParameterID { ids::bypass, v }, "Bypass", false));
+    p.push_back (std::make_unique<AudioParameterBool> (ParameterID { ids::hq, v }, "High Quality 8x", false));
+    p.push_back (std::make_unique<AudioParameterBool> (ParameterID { ids::link, v }, "Stereo Link", true));
     return { p.begin(), p.end() };
 }
 
@@ -35,6 +37,8 @@ LapCat2AProcessor::LapCat2AProcessor()
     pEmph   = apvts.getRawParameterValue (ids::emph);
     pMix    = apvts.getRawParameterValue (ids::mix);
     pBypass = apvts.getRawParameterValue (ids::bypass);
+    pHq     = apvts.getRawParameterValue (ids::hq);
+    pLink   = apvts.getRawParameterValue (ids::link);
 }
 
 bool LapCat2AProcessor::isBusesLayoutSupported (const BusesLayout& l) const
@@ -60,6 +64,7 @@ void LapCat2AProcessor::prepareToPlay (double sampleRate, int)
     lap::Params q;
     q.peak = pPeak->load(); q.gain = pGain->load(); q.limit = pMode->load() > 0.5f ? 1.0f : 0.0f;
     q.emph = pEmph->load(); q.mix = pMix->load(); q.bypass = pBypass->load() > 0.5f; q.noise = noiseRt.load();
+    q.hq = pHq->load() > 0.5f; q.link = pLink->load() > 0.5f;
     core.setParams (q);
     core.snap();
     setLatencySamples (core.latency());
@@ -77,6 +82,7 @@ void LapCat2AProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer&)
     lap::Params q;
     q.peak = pPeak->load(); q.gain = pGain->load(); q.limit = pMode->load() > 0.5f ? 1.0f : 0.0f;
     q.emph = pEmph->load(); q.mix = pMix->load(); q.bypass = pBypass->load() > 0.5f; q.noise = noiseRt.load();
+    q.hq = pHq->load() > 0.5f; q.link = pLink->load() > 0.5f;
     core.setParams (q);
 
     float inPk = 0.0f;

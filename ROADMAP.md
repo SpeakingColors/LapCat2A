@@ -1,5 +1,8 @@
 # LapCat2A roadmap
 
+## Done in v0.1.1
+- Host parameters "High Quality 8x" (off by default, same 30 sample latency) and "Stereo Link" (on by default, the original behaviour; off gives two independent cells). Not in the mockup UI yet, so they show in the DAW parameter list only.
+
 ## Done in v0.1.0 (test build)
 - Native JUCE editor ported from the approved mockup (layout generated from the mockup DOM), three looks, wood cheeks, VU meter, transfer curve, history, sidechain filter, dB meters, info bubbles, no scrollbars.
 - C++ core (`src/core/LapCat2A.h`) with its own tests (`sh tests/run.sh`), identical to the mockup's model in a parity test.
@@ -22,4 +25,4 @@ Level calibration, attack and release, knob to sound time, aliasing at one hard 
 - Test in Bitwig, Reaper, Ardour and Studio One; fix host issues.
 - Listen and tune the cell, tube stage and the supersaw presets by ear.
 - A stronger model or a real unit comparison would help tune the release and cell curves.
-- Optional stereo link or mid/side sidechain; an HQ switch for 8x oversampling if aliasing at extremes matters.
+- Mid/side sidechain option; put the 8x and link switches on the panel (needs a mockup update first).

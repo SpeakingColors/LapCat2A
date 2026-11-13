@@ -205,6 +205,74 @@ int main()
         }
     }
 
+    // ---- High quality (8x) and stereo link ----------------------------------------------------
+    std::printf ("== high quality 8x and stereo link\n");
+    {
+        Params hp = P (50, 20); hp.hq = true;
+        Core c = make (hp);
+        std::vector<float> l (2000, 0.0f), r; l[100] = 1.0f; r = l;
+        run (c, l, r);
+        int pk = 0; for (int i = 0; i < (int) l.size(); ++i) if (std::fabs (l[(size_t) i]) > std::fabs (l[(size_t) pk])) pk = i;
+        CHECK (pk - 100 == kLatency && c.latency() == kLatency, "8x: the latency is still exactly %d samples (measured %d)", kLatency, pk - 100);
+        // aliasing at an extreme setting, 4x against 8x
+        auto alias = [] (bool hq)
+        {
+            Params p = P (100, 100); p.hq = hq;
+            Core cc = make (p);
+            const int N = 16384, f0 = 1087;   // whole number of cycles, 10.4 kHz at 48 kHz
+            std::vector<float> a ((size_t) (N + 8192)), b;
+            for (size_t i = 0; i < a.size(); ++i) a[i] = (float) (dbToLin (-26.0) * std::sin (2.0 * kPi * f0 * (double) i / (double) N));
+            b = a; run (cc, a, b);
+            std::vector<std::complex<double>> z ((size_t) N);
+            for (int i = 0; i < N; ++i) z[(size_t) i] = (double) a[(size_t) (8192 + i)];
+            fft (z);
+            double fund = 0, bad = 0;
+            for (int k = 1; k < N / 2; ++k)
+            {
+                const double pw = std::norm (z[(size_t) k]);
+                const bool harmonic = (k % f0 == 0) || std::abs ((k % f0)) <= 1 || std::abs (f0 - (k % f0)) <= 1;
+                if (k >= f0 - 1 && k <= f0 + 1) fund += pw; else if (! harmonic) bad += pw;
+            }
+            return 10.0 * std::log10 (bad / std::max (fund, 1e-30) + 1e-30);
+        };
+        const double a4 = alias (false), a8 = alias (true);
+        std::printf ("measured  10.4 kHz at -26 dBFS, Peak 100 Gain 100: non-harmonic energy %.1f dB with 4x and %.1f dB with 8x below the fundamental\n", a4, a8);
+        CHECK (a8 <= a4 + 0.5, "8x does not alias more than 4x (%.1f against %.1f dB)", a8, a4);
+        // switching quality at run time stays finite
+        Core cs = make (P (60, 40)); std::vector<float> l2 (96000), r2;
+        for (size_t i = 0; i < l2.size(); ++i) l2[i] = (float) (0.5 * std::sin (0.07 * (double) i));
+        r2 = l2;
+        bool fin = true;
+        for (size_t blk = 0; blk < 96; ++blk)
+        {
+            Params q = P (60, 40); q.hq = (blk & 1) != 0; cs.setParams (q);
+            cs.process (l2.data() + blk * 1000, r2.data() + blk * 1000, 1000);
+        }
+        for (float v : l2) fin = fin && std::isfinite (v) && std::fabs (v) < 20.0f;
+        CHECK (fin, "switching between 4x and 8x while playing stays finite");
+
+        // stereo link: a loud left channel with a quiet right channel
+        std::vector<float> L = sine (1000.0, -6.0, 48000), R = sine (1000.0, -40.0, 48000);
+        auto rightGain = [&] (bool link)
+        {
+            Params p = P (70, 20); p.link = link;
+            Core cc = make (p); auto a = L, b = R; run (cc, a, b);
+            const double in = rms (R, 36000, 48000), out = rms (b, 36000 + (size_t) kLatency, 48000);
+            return linToDb (out / in);
+        };
+        const double gLinked = rightGain (true), gUnlinked = rightGain (false);
+        std::printf ("measured  quiet right channel gain: %.2f dB linked, %.2f dB unlinked (loud left channel)\n", gLinked, gUnlinked);
+        CHECK (gLinked < gUnlinked - 3.0, "linked: the loud left channel pulls the quiet right channel down; unlinked: it does not");
+        // a mono-compatible signal gives identical channels in both modes
+        {
+            std::vector<float> a = sine (440.0, -10.0, 48000), b = a, a2 = a, b2 = a;
+            Params p1 = P (60, 20), p2 = p1; p1.link = true; p2.link = false;
+            Core c1 = make (p1), c2 = make (p2); run (c1, a, b); run (c2, a2, b2);
+            double d = 0; for (size_t i = 0; i < a.size(); ++i) d = std::max (d, (double) std::fabs (a[i] - a2[i]));
+            CHECK (d < 1e-6, "identical channels: linked and unlinked give the same sound (largest difference %.2e)", d);
+        }
+    }
+
     // ---- stability --------------------------------------------------------------------------
     std::printf ("== stability\n");
     {

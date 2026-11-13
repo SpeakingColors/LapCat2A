@@ -5,3 +5,5 @@ In the zip: installers for Windows (.exe), macOS (.pkg) and Linux (Flatpak exten
 The installers are not signed or notarized, so your system may warn you. Windows: More info, then Run anyway. macOS: System Settings, Privacy and Security, Open Anyway. Details are in INSTALL.txt and the manual.
 
 What is measured and what is not is listed in ROADMAP.md.
+
+New in 0.1.1: optional 8x quality (host parameter "High Quality 8x") and stereo link switch (host parameter "Stereo Link"). Same latency, old saves load unchanged.

@@ -13,6 +13,8 @@ namespace ids
     inline constexpr const char* emph = "emph";       // HF Emphasis, 0..100
     inline constexpr const char* mix = "mix";         // 0..100 percent wet
     inline constexpr const char* bypass = "bypass";
+    inline constexpr const char* hq = "hq";
+    inline constexpr const char* link = "link";
 }
 
 // Plugin-wide settings kept in the saved state (not presets, not automatable).
@@ -77,7 +79,7 @@ private:
 
     lap::Core core;
     std::atomic<bool> noiseRt { false }; // audio-thread copy of the noise setting
-    std::atomic<float>* pPeak; std::atomic<float>* pGain; std::atomic<float>* pMode;
+    std::atomic<float>* pPeak; std::atomic<float>* pGain; std::atomic<float>* pMode; std::atomic<float>* pHq; std::atomic<float>* pLink;
     std::atomic<float>* pEmph; std::atomic<float>* pMix; std::atomic<float>* pBypass;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LapCat2AProcessor)

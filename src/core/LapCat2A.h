@@ -31,6 +31,8 @@ constexpr double kEmphFc = 500.0;
 constexpr int    kOsL = 4, kOsTaps = 121, kOsMid = 60; // 4x oversampler, linear phase Kaiser FIR
 constexpr double kTubeA = 0.3, kCellK = 0.8, kXfmrK = 0.5;
 constexpr int    kLatency = 2 * kOsMid / kOsL; // 30 samples, exact (wet path), see the header comment
+constexpr int    kOsL8 = 8, kOsTaps8 = 241, kOsMid8 = 120; // High quality: 8x oversampler, still exactly 30 samples (2 * 120 / 8)
+static_assert (2 * kOsMid8 / kOsL8 == kLatency, "8x oversampler must keep the same latency");
 
 struct Params
 {
@@ -41,6 +43,8 @@ struct Params
     float mix = 100.0f;   // 0..100 percent wet
     bool  bypass = false;
     bool  noise = false;  // hardware noise floor and mains hum (off by default)
+    bool  hq = false;     // 8x oversampling around the tube stage (default 4x); same latency
+    bool  link = true;    // stereo link: one gain reduction for both channels (the original behaviour). Off = two independent cells
 };
 
 // Static curve of the feedback side-chain, shared by the audio code and the transfer curve display.
@@ -78,7 +82,7 @@ struct Curve
 class Core
 {
 public:
-    Core() { designFir(); prepare (48000.0); }
+    Core() { designFir (fir4, kOsTaps, kOsMid, 0.1245); designFir (fir8, kOsTaps8, kOsMid8, 0.1245 / 2.0); prepare (48000.0); }
 
     void prepare (double sampleRate)
     {
@@ -97,7 +101,7 @@ public:
 
     void reset()
     {
-        lp[0] = lp[1] = 0.0; det = detIn = a = b = mem = gr = 0.0;
+        lp[0] = lp[1] = 0.0; cell[0] = Cell(); cell[1] = Cell();
         grNowV = grAvgV = grPkV = 0.0; vuEV = 0.0; lvInV = -90.0; scV = -90.0;
         std::memset (xu, 0, sizeof xu); std::memset (zp, 0, sizeof zp);
         tf[0] = tf[1] = 0.0; dc[0] = dc[1] = 0.0; env = 0.0; hum = 0.0;
@@ -109,7 +113,8 @@ public:
     {
         pr.set (q.peak, rampLen); gn.set (q.gain, rampLen); md.set (q.limit, rampLen);
         em.set (q.emph, rampLen); mx.set (q.mix, rampLen);
-        tBypass = q.bypass; noiseOn = q.noise;
+        tBypass = q.bypass; noiseOn = q.noise; linkOn = q.link;
+        if (q.hq != hq) { hq = q.hq; std::memset (xu, 0, sizeof xu); std::memset (zp, 0, sizeof zp); }
     }
     // Jump every smoother to its target (prepare and tests).
     void snap() { pr.snap(); gn.snap(); md.snap(); em.snap(); mx.snap(); bypassMix = tBypass ? 1.0 : 0.0; derive (true); }
@@ -143,29 +148,17 @@ public:
             di = (di + 1) & 63;
 
             lp[0] += aLp * (x0 - lp[0]); lp[1] += aLp * (x1 - lp[1]);
-            detIn += (ax > detIn ? cDetA : cDetR) * (ax - detIn);
             // the side-chain is fed from the signal after the cell (feedback), as in the manual
-            const double g = dbToLin (-gr);
-            const double s = std::max (std::fabs (x0 - kEmph * lp[0]), std::fabs (x1 - kEmph * lp[1])) * g;
-            det += (s > det ? cDetA : cDetR) * (s - det);
-            const double lv = linToDb (det);
-            scV = lv; lvInV = linToDb (detIn);
-            const double D = on ? Curve::drive (lv - thr, limitV) : 0.0;
-            // T4 cell: fast stage and a slow stage whose release depends on the history
-            const double tauA = std::min (0.010, std::max (0.006, 0.010 / (1.0 + D / 30.0)));
-            a += (D > a ? 1.0 - std::exp (-1.0 / (tauA * fs)) : cRelA) * (D - a);
-            const double tb = 0.35 + 3.65 * mem;
-            b += (D > b ? cAttB : 1.0 - std::exp (-1.0 / (tb * fs))) * (D - b);
-            const double e = std::min (1.0, D / 18.0);
-            mem += (e > mem ? cMemUp : cMemDn) * (e - mem);
-            const double wb = 0.12 + 0.28 * mem;
-            gr = (1.0 - wb) * a + wb * b;
-            if (! std::isfinite (gr)) { a = b = mem = gr = det = detIn = 0.0; }
-            gs += gr; gm = std::max (gm, gr); grNowV = gr;
+            const double e0 = std::fabs (x0 - kEmph * lp[0]), e1 = std::fabs (x1 - kEmph * lp[1]);
+            if (linkOn) { stepCell (cell[0], ax, std::max (e0, e1)); cell[1] = cell[0]; }
+            else { stepCell (cell[0], std::fabs (x0), e0); stepCell (cell[1], std::fabs (x1), e1); }
+            const double gr0 = cell[0].gr, gr1 = cell[1].gr, grMax = std::max (gr0, gr1);
+            scV = std::max (linToDb (cell[0].det), linToDb (cell[1].det)); lvInV = std::max (linToDb (cell[0].detIn), linToDb (cell[1].detIn));
+            gs += grMax; gm = std::max (gm, grMax); grNowV = grMax;
 
             // audio through the cell, with its cubic (3rd harmonic) distortion that grows with gain reduction
-            const double g2 = dbToLin (-gr), eps = kCellK * gr;
-            double y0 = sat3 (x0 * g2, eps) * gl, y1 = sat3 (x1 * g2, eps) * gl;
+            const double g20 = dbToLin (-gr0), g21 = dbToLin (-gr1), eps0 = kCellK * gr0, eps1 = kCellK * gr1;
+            double y0 = sat3 (x0 * g20, eps0) * gl, y1 = sat3 (x1 * g21, eps1) * gl;
 
             // tube stage: tanh with an even-order bias that scales with drive; 2x oversampled
             env += cEnv * (std::max (std::fabs (y0), std::fabs (y1)) - env);
@@ -210,6 +203,28 @@ public:
     double threshold() const { return thr; }
 
 private:
+    // One T4 cell with its detector. Linked: one cell drives both channels. Unlinked: one cell per channel.
+    struct Cell { double det = 0, detIn = 0, a = 0, b = 0, mem = 0, gr = 0; };
+    void stepCell (Cell& k, double axIn, double sRaw)
+    {
+        k.detIn += (axIn > k.detIn ? cDetA : cDetR) * (axIn - k.detIn);
+        const double g = dbToLin (-k.gr);
+        const double s = sRaw * g;
+        k.det += (s > k.det ? cDetA : cDetR) * (s - k.det);
+        const double lv = linToDb (k.det);
+        const double D = on ? Curve::drive (lv - thr, limitV) : 0.0;
+        // T4 cell: fast stage and a slow stage whose release depends on the history
+        const double tauA = std::min (0.010, std::max (0.006, 0.010 / (1.0 + D / 30.0)));
+        k.a += (D > k.a ? 1.0 - std::exp (-1.0 / (tauA * fs)) : cRelA) * (D - k.a);
+        const double tb = 0.35 + 3.65 * k.mem;
+        k.b += (D > k.b ? cAttB : 1.0 - std::exp (-1.0 / (tb * fs))) * (D - k.b);
+        const double e = std::min (1.0, D / 18.0);
+        k.mem += (e > k.mem ? cMemUp : cMemDn) * (e - k.mem);
+        const double wb = 0.12 + 0.28 * k.mem;
+        k.gr = (1.0 - wb) * k.a + wb * k.b;
+        if (! std::isfinite (k.gr)) k = Cell();
+    }
+
     // linear ramp
     struct Ramp
     {
@@ -236,21 +251,23 @@ private:
     // Down: the FIR on the 4x stream, decimated at phase 0, so the total delay is exactly 120 samples at 4x = 30 base samples.
     double tubeOs (int c, double y, double B, double tB, double nrm)
     {
+        const int L = hq ? kOsL8 : kOsL, T = hq ? kOsTaps8 : kOsTaps, XL = T / L + 1;
+        const double* fir = hq ? fir8 : fir4;
         double* x = xu[c];
         double* z = zp[c];
-        std::memmove (x + 1, x, (kXuLen - 1) * sizeof (double));
+        std::memmove (x + 1, x, (size_t) (XL - 1) * sizeof (double));
         x[0] = y;
-        double zz[kOsL];
-        for (int p = 0; p < kOsL; ++p)
+        double zz[kOsL8];
+        for (int p = 0; p < L; ++p)
         {
             double acc = 0.0;
-            for (int q = 0; 4 * q + p < kOsTaps; ++q) acc += fir[4 * q + p] * x[q];
-            zz[p] = tube ((double) kOsL * acc, B, tB, nrm);
+            for (int q = 0; L * q + p < T; ++q) acc += fir[L * q + p] * x[q];
+            zz[p] = tube ((double) L * acc, B, tB, nrm);
         }
         double o = fir[0] * zz[0];
-        for (int k = 1; k < kOsTaps; ++k) o += fir[k] * z[k - 1];
-        std::memmove (z + kOsL, z, (kOsTaps - 1 - kOsL) * sizeof (double));
-        z[0] = zz[3]; z[1] = zz[2]; z[2] = zz[1]; z[3] = zz[0];
+        for (int k = 1; k < T; ++k) o += fir[k] * z[k - 1];
+        std::memmove (z + L, z, (size_t) (T - 1 - L) * sizeof (double));
+        for (int j = 0; j < L; ++j) z[j] = zz[L - 1 - j];
         return o;
     }
 
@@ -262,19 +279,19 @@ private:
         for (int k = 1; k < 80; ++k) { t *= (x / (2.0 * k)) * (x / (2.0 * k)); s += t; }
         return s;
     }
-    void designFir()
+    static void designFir (double* fir, int taps, int mid, double fc)
     {
         double s = 0.0;
-        const double fc = 0.1245, beta = 7.9; // cycles per sample at the 4x rate
-        for (int n = 0; n < kOsTaps; ++n)
+        const double beta = 7.9; // fc is in cycles per sample at the oversampled rate
+        for (int n = 0; n < taps; ++n)
         {
-            const int k = n - kOsMid;
+            const int k = n - mid;
             const double sn = k == 0 ? 2.0 * fc : std::sin (2.0 * kPi * fc * k) / (kPi * k);
-            const double r = (double) k / (double) kOsMid;
+            const double r = (double) k / (double) mid;
             const double w = besselI0 (beta * std::sqrt (std::max (0.0, 1.0 - r * r))) / besselI0 (beta);
             fir[n] = sn * w; s += fir[n];
         }
-        for (int n = 0; n < kOsTaps; ++n) fir[n] /= s;
+        for (int n = 0; n < taps; ++n) fir[n] /= s;
     }
 
     double rnd() { rng ^= rng << 13; rng ^= rng >> 17; rng ^= rng << 5; return (double) rng / 2147483648.0 - 1.0; }
@@ -283,14 +300,15 @@ private:
     double aDc = 0, aLp = 0, cDetA = 0, cDetR = 0, cRelA = 0, cAttB = 0, cMemUp = 0, cMemDn = 0, cEnv = 0, cVu = 0, aT = 0, humW = 0;
     int rampLen = 480;
     Ramp pr, gn, md, em, mx;
-    bool tBypass = false, noiseOn = false, os = true, on = true, dcBlock = true;
+    bool tBypass = false, noiseOn = false, os = true, on = true, dcBlock = true, hq = false, linkOn = true;
     double bypassMix = 0.0;
     double thr = -14.0, gl = 1.0, limitV = 0.0, kEmph = 0.0, mixV = 1.0;
-    double dc[2] {}, lp[2] {}, det = 0, detIn = 0, a = 0, b = 0, mem = 0, gr = 0, env = 0, hum = 0, tf[2] {};
+    double dc[2] {}, lp[2] {}, env = 0, hum = 0, tf[2] {};
+    Cell cell[2];
     double grNowV = 0, grAvgV = 0, grPkV = 0, vuEV = 0, lvInV = -90, scV = -90, inPkV = 0;
-    double fir[kOsTaps] {};
-    static constexpr int kXuLen = kOsTaps / kOsL + 1; // 31
-    double xu[2][kXuLen] {}, zp[2][kOsTaps] {};
+    double fir4[kOsTaps] {}, fir8[kOsTaps8] {};
+    static constexpr int kXuLen = kOsTaps8 / kOsL8 + 1; // 31 for both 4x (121 taps) and 8x (241 taps)
+    double xu[2][kXuLen] {}, zp[2][kOsTaps8] {};
     double dly[2][64] {};
     int di = 0;
     uint32_t rng = 2463534242u;
