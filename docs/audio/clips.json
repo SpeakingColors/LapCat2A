@@ -1,0 +1,65 @@
+[
+  {
+    "before": "lapcat2a-before-lead.mp3",
+    "after": "lapcat2a-after-lead-vocal-leveler.mp3",
+    "preset": "Vocal Leveler",
+    "source": "Vocal-like lead",
+    "description": "Vocal-like lead through the real LapCat2A C++ core with the factory preset Vocal Leveler (Vocal; smooth, tracking). The After clip is level matched to the Before clip (-2.1 dB)."
+  },
+  {
+    "before": "lapcat2a-before-bass.mp3",
+    "after": "lapcat2a-after-bass-vocal-leveler.mp3",
+    "preset": "Vocal Leveler",
+    "source": "Bass line",
+    "description": "Bass line through the real LapCat2A C++ core with the factory preset Vocal Leveler (Vocal; smooth, tracking). The After clip is level matched to the Before clip (-0.6 dB)."
+  },
+  {
+    "before": "lapcat2a-before-mix.mp3",
+    "after": "lapcat2a-after-mix-vocal-leveler.mp3",
+    "preset": "Vocal Leveler",
+    "source": "Full mix loop",
+    "description": "Full mix loop through the real LapCat2A C++ core with the factory preset Vocal Leveler (Vocal; smooth, tracking). The After clip is level matched to the Before clip (-1.5 dB)."
+  },
+  {
+    "before": "lapcat2a-before-lead.mp3",
+    "after": "lapcat2a-after-lead-bass-glue.mp3",
+    "preset": "Bass Glue",
+    "source": "Vocal-like lead",
+    "description": "Vocal-like lead through the real LapCat2A C++ core with the factory preset Bass Glue (Bass; glue, even). The After clip is level matched to the Before clip (-1.2 dB)."
+  },
+  {
+    "before": "lapcat2a-before-bass.mp3",
+    "after": "lapcat2a-after-bass-bass-glue.mp3",
+    "preset": "Bass Glue",
+    "source": "Bass line",
+    "description": "Bass line through the real LapCat2A C++ core with the factory preset Bass Glue (Bass; glue, even). The After clip is level matched to the Before clip (-0.1 dB)."
+  },
+  {
+    "before": "lapcat2a-before-mix.mp3",
+    "after": "lapcat2a-after-mix-bass-glue.mp3",
+    "preset": "Bass Glue",
+    "source": "Full mix loop",
+    "description": "Full mix loop through the real LapCat2A C++ core with the factory preset Bass Glue (Bass; glue, even). The After clip is level matched to the Before clip (-0.7 dB)."
+  },
+  {
+    "before": "lapcat2a-before-lead.mp3",
+    "after": "lapcat2a-after-lead-thicken-lead-heavy.mp3",
+    "preset": "Thicken Lead Heavy",
+    "source": "Vocal-like lead",
+    "description": "Vocal-like lead through the real LapCat2A C++ core with the factory preset Thicken Lead Heavy (Synth; thicken, supersaw, lead, hard dance). The After clip is level matched to the Before clip (-1.2 dB)."
+  },
+  {
+    "before": "lapcat2a-before-bass.mp3",
+    "after": "lapcat2a-after-bass-thicken-lead-heavy.mp3",
+    "preset": "Thicken Lead Heavy",
+    "source": "Bass line",
+    "description": "Bass line through the real LapCat2A C++ core with the factory preset Thicken Lead Heavy (Synth; thicken, supersaw, lead, hard dance). The After clip is level matched to the Before clip (+2.5 dB)."
+  },
+  {
+    "before": "lapcat2a-before-mix.mp3",
+    "after": "lapcat2a-after-mix-thicken-lead-heavy.mp3",
+    "preset": "Thicken Lead Heavy",
+    "source": "Full mix loop",
+    "description": "Full mix loop through the real LapCat2A C++ core with the factory preset Thicken Lead Heavy (Synth; thicken, supersaw, lead, hard dance). The After clip is level matched to the Before clip (+1.0 dB)."
+  }
+]
