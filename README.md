@@ -1,5 +1,7 @@
 # LapCat2A
 
+<p align="center"><a href="https://ko-fi.com/studio87"><img src="https://raw.githubusercontent.com/SpeakingColors/.github/main/assets/kofi-banner.svg" alt="Support Studio 87 on Ko-fi" width="440"></a></p>
+
 A free, open source, cat-themed optical leveling amplifier (VST3), inspired by the classic LA-2A. A behaviour model built from published manuals and measurements, not a circuit simulation. Made to thicken supersaw leads and pads, and good for vocals, bass and buses too.
 
 <p align="center"><img src="docs/screenshot.png" width="900" alt="The LapCat2A plugin window, rendered from the compiled editor"></p>
