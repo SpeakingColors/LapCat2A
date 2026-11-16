@@ -515,10 +515,17 @@ void Modal::openAbout()
     upd->onClick = [updMsg] (const ModifierKeys&)
     {
         if (! URL (String (studio87link::updaterUrl ("LapCat2A"))).launchInDefaultBrowser())
-            updMsg->setSegs ({ { studio87link::fallbackMessage(), false, false, true } });
+        {
+            studio87link::openGitHub ("LapCat2A");   // no handler for studio87://: open the plugin's GitHub home page instead
+            updMsg->setSegs ({ { studio87link::fallbackNote(), false, false, true } });
+        }
     };
-    p->row ({ gh, rel, kofi, upd }, { 90, 90, 140, 240 }, 28);
-    p->row ({ updMsg }, { 0 }, 20);
+    auto* ghb = p->make<PButton> (c, studio87link::githubButtonText());
+    ghb->tip = studio87link::githubTipText();
+    ghb->onClick = [] (const ModifierKeys&) { studio87link::openGitHub ("LapCat2A"); };
+    p->row ({ gh, rel, kofi }, { 90, 90, 140 }, 28);
+    p->row ({ upd, ghb }, { 240, 170 }, 28);
+    p->row ({ updMsg }, { 0 }, 36);
     p->fit();
     show (std::move (p));
 }
