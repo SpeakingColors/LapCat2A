@@ -27,9 +27,6 @@ Gain, Peak Reduction, Mix, HF Emphasis, Ratio mode (Compress or Limit), Meter (G
 ## Build from source
 `sh tests/run.sh` runs the core tests without JUCE. `cmake -S . -B build && cmake --build build` builds the VST3 (JUCE 8.0.16 is fetched by CMake). Layout.h is generated from the approved mockup (`tools/dump_layout.py`, `tools/gen_layout.py`). The interactive mockup stays in `docs/mockup/`.
 
-## Privacy
-Collects nothing. No network access, ever. The Ko-fi and GitHub buttons only open your browser when you click them.
-
 ## Support
 <p align="center">
   <a href="https://ko-fi.com/studio87"><img src="https://img.shields.io/badge/Support_Studio_87-on_Ko--fi-FF5E5B?style=for-the-badge&logo=kofi&logoColor=white" alt="Support Studio 87 on Ko-fi"></a>
